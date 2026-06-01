@@ -42,16 +42,25 @@ done
 # If we get here, the patched module failed. Fall back to original.
 logger -t wl-fallback "TIMEOUT — WiFi did not come up within ${TIMEOUT}s. Falling back to original module."
 
+# Guard: ensure fallback module exists before destroying the patched one
+if [ ! -f "$FALLBACK_MODULE" ]; then
+    logger -t wl-fallback "CRITICAL: $FALLBACK_MODULE not found — cannot revert. Was step 5 of installation skipped?"
+    exit 1
+fi
+
 # Unload the patched module
 modprobe -r wl 2>/dev/null || true
 sleep 1
 
+# Save a copy of the failed patched module before overwriting (recovery aid)
+cp "$PATROLLED_MODULE" "${PATROLLED_MODULE}.failed.zst" 2>/dev/null || true
+
 # Swap in the fallback
 cp "$FALLBACK_MODULE" "$PATROLLED_MODULE"
-depmod -a
+depmod -a || true
 
 # Reload
-modprobe wl
+modprobe wl || true
 sleep 3
 
 # Verify

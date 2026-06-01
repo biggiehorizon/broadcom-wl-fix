@@ -37,8 +37,8 @@ chmod +x install.sh
 sudo apt install broadcom-sta-dkms
 
 # Apply patches to DKMS source tree
-sudo patch -d /usr/src/broadcom-sta-6.30.223.271 -p1 < patches/patch1-wl_linux.patch
-sudo patch -d /usr/src/broadcom-sta-6.30.223.271 -p1 < patches/patch2-wl_cfg80211.patch
+sudo patch -d /usr/src/broadcom-sta-6.30.223.271 -p0 < patches/patch1-wl_linux.patch
+sudo patch -d /usr/src/broadcom-sta-6.30.223.271 -p0 < patches/patch2-wl_cfg80211.patch
 
 # Backup original module
 cp /lib/modules/$(uname -r)/updates/dkms/wl.ko.zst /tmp/wl.ko.original.zst

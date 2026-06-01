@@ -12,10 +12,22 @@ PATCHDIR="$(dirname "$0")/patches"
 echo "=== broadcom-wl-fix installer ==="
 echo "Kernel: $KERNEL_VER"
 
-# 1. Apply patches to DKMS source
+# Guard: broadcom-sta-dkms must be installed first
+if [ ! -d "$SRC" ]; then
+    echo "ERROR: $SRC not found."
+    echo "Install the driver first: sudo apt install broadcom-sta-dkms"
+    exit 1
+fi
+
+# 1. Apply patches to DKMS source (idempotent — skip if already applied)
 echo "[1/6] Applying patches..."
-sudo patch -d "$SRC" -p0 < "$PATCHDIR/patch1-wl_linux.patch"
-sudo patch -d "$SRC" -p0 < "$PATCHDIR/patch2-wl_cfg80211.patch"
+for patch in patch1-wl_linux.patch patch2-wl_cfg80211.patch; do
+    if patch -d "$SRC" -p0 --dry-run --reverse --silent < "$PATCHDIR/$patch" 2>/dev/null; then
+        echo "  $patch already applied — skipping"
+    else
+        sudo patch -d "$SRC" -p0 < "$PATCHDIR/$patch"
+    fi
+done
 
 # 2. Backup original module
 echo "[2/6] Backing up original module..."
@@ -47,7 +59,7 @@ sleep 3
 
 echo ""
 echo "=== Done ==="
-echo "WiFi interface: $(iwconfig 2>/dev/null | grep -o 'ESSID:"[^"]*"' || echo 'checking...')"
+iwconfig wlp2s0 2>/dev/null || echo "Interface not yet up — reboot to confirm fallback service works"
 
 echo ""
 echo "Verify patches:"
