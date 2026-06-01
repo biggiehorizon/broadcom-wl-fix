@@ -1,0 +1,11 @@
+--- src/wl/sys/wl_linux.c
++++ src/wl/sys/wl_linux.c
+@@ -1936,7 +1936,7 @@
+ 				i = 0;
+ 				break;
+ 			}
+-			bcopy(ha->addr, &maclist->ea[i++], ETHER_ADDR_LEN);
++			bcopy(ha->addr, ((u8 *)maclist->ea) + (i++ * ETHER_ADDR_LEN), ETHER_ADDR_LEN);
+ 		}
+ #endif 
+ 		maclist->count = i;

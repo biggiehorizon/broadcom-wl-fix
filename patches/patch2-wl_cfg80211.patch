@@ -1,0 +1,11 @@
+--- src/wl/sys/wl_cfg80211_hybrid.c
++++ src/wl/sys/wl_cfg80211_hybrid.c
+@@ -2027,7 +2027,7 @@
+ 	if (err)
+ 		goto inform_single_bss_out;
+ 
+-	err = wl_cp_ie(wl, beacon_proberesp->variable, WL_BSS_INFO_MAX -
++	err = wl_cp_ie(wl, (u8 *)beacon_proberesp->variable, WL_BSS_INFO_MAX -
+ 	         offsetof(struct wl_cfg80211_bss_info, frame_buf));
+ 	if (err)
+ 		goto inform_single_bss_out;
