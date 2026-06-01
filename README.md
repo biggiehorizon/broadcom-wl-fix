@@ -126,6 +126,3 @@ dmesg | grep -E "wl_inform_single_bss|_wl_set_multicast_list|WARNING|UBSAN" | gr
 | `UBSAN: array-index-out-of-bounds ... _wl_set_multicast_list` on network changes | No warnings |
 | `memcpy: detected field-spanning write (size 430)` | No warnings |
 
-## License
-
-MIT — share freely, patch your own hardware.
