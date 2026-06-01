@@ -1,0 +1,14 @@
+[Unit]
+Description=Broadcom wl driver fallback — auto-revert if patched module fails
+After=network-pre.target
+Before=network.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/wl-fallback.sh
+RemainAfterExit=yes
+StandardOutput=journal
+
+[Install]
+WantedBy=sysinit.target
